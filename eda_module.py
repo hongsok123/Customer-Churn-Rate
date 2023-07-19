@@ -13,7 +13,7 @@ def plot_target_dist(df):
     plt.pie(df.churn.value_counts(),labels = ['No Churn', 'Churn'], autopct = '%.1f%%', radius = 1, textprops={'fontsize': 20, 'fontweight': 'bold'})
     plt.title('Churn Outcome Pie Chart', fontsize = 30, fontweight = 'bold')
     plt.subplot(122)
-    t = sns.countplot(df.churn)
+    t = sns.countplot(df.churn.value_counts())
     t.set_xlabel('Churn', fontweight = 'bold', fontsize = 20)
     t.set_ylabel('Count', fontweight = 'bold', fontsize = 20)
     plt.title('Churn Outcome Distributions', fontsize = 30, fontweight = 'bold')
@@ -23,7 +23,7 @@ def plot_target_dist(df):
 def plot_kde(df, feature):
     plt.figure(figsize = (15, 5))
     plt.title(f"KDE Plot: {feature}", fontsize = 30, fontweight = 'bold')
-    ax = sns.kdeplot(df[df.churn == 'No'][feature].dropna(), label = 'No Churn', lw = 5, legend = True)
+    ax = sns.kdeplot(df[df.churn == 'No'][feature].dropna(), label = 'No Churn', lw = 2, legend = True)
     plt.legend = True
     ax1 = sns.kdeplot(df[df.churn == 'Yes'][feature].dropna(), label = 'Churn', lw = 2, legend = True)
     if feature == 'tenure':
@@ -77,17 +77,17 @@ def plot_gender_dist(df):
     plt.pie(df.gender.value_counts(), labels = ['Male', 'Female'], autopct = '%.1f%%', radius = 1, textprops = {'fontsize':20, 'fontweight':'bold'})
     plt.title('Overall Data Gender Composition', fontweight = 'bold', fontsize = 30)
     
-    plt.subplot(132)
-    a = sns.countplot(data = df, x = 'gender', hue = 'churn')
-    a.set_title('Gender Distribution by Churn', fontsize = 30, fontweight = 'bold')
-    a.set_xlabel('Gender', fontweight = 'bold', fontsize = 20)
-    a.set_ylabel('Count', fontweight = 'bold', fontsize = 20)
+    #plt.subplot(132)
+    # a = sns.countplot(data = df, x = 'gender', hue = 'churn')
+    # a.set_title('Gender Distribution by Churn', fontsize = 30, fontweight = 'bold')
+    # a.set_xlabel('Gender', fontweight = 'bold', fontsize = 20)
+    # a.set_ylabel('Count', fontweight = 'bold', fontsize = 20)
     
-    plt.subplot(133)
-    x = sns.violinplot('gender', 'monthlycharges', 'churn', df, split = True)
-    x.set_title('Violin Plot: Monthly Charges by Gender', fontsize = 30, fontweight = 'bold')
-    x.set_xlabel('Gender', fontsize = 20, fontweight = 'bold')
-    x.set_ylabel('Monthly Charges ($)', fontweight = 'bold', fontsize = 20)
+    # plt.subplot(133)
+    # x = sns.violinplot(x = 'gender', y= 'monthlycharges', data = df, split = True)
+    # x.set_title('Violin Plot: Monthly Charges by Gender', fontsize = 30, fontweight = 'bold')
+    # x.set_xlabel('Gender', fontsize = 20, fontweight = 'bold')
+    # x.set_ylabel('monthlycharges', fontweight = 'bold', fontsize = 20)
     
     plt.tight_layout()
     
@@ -105,7 +105,7 @@ def plot_age_dist(df):
     g = g.groupby('seniorcitizen')['churn'].value_counts().to_frame()
     g = g.rename({'churn':'pct_total'}, axis = 1).reset_index()
     g['pct_total'] = (g['pct_total']/len(df)) * 100
-    t = sns.barplot('seniorcitizen', y = 'pct_total', hue = 'churn', data = g)
+    t = sns.barplot('seniorcitizen', y = g['pct_total'], hue = 'churn', data = g)
     t.set_title('Churn % by Age', fontsize = 30, fontweight = 'bold')
     t.set_xlabel('')
     t.set_ylabel('Percentage of Customers', fontsize = 20, fontweight = 'bold')
@@ -379,7 +379,7 @@ def plot_contracts(df):
     copy = copy.groupby('contract')['churn'].value_counts().to_frame()
     copy = copy.rename({'churn':'pct_total'}, axis = 1).reset_index()
     copy['pct_total'] = (copy['pct_total']/len(df)) * 100
-    a = sns.barplot('contract', y = 'pct_total', hue = 'churn', data = copy)
+    a = sns.barplot(x='contract', y = 'pct_total', hue = 'churn', data = copy)
     a.set_title('% Churn - Contract Type', fontsize = 30, fontweight = 'bold')
     a.set(xticklabels = ['Monthly', '1-Year', '2-Year'])
     a.set_xlabel('')
